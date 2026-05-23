@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* ============================================
+   Phòng Khám Nhi Đồng Dế Mèn — Design Tokens
+   ============================================ */
+:root {
+  /* Brand colors — từ palette ảnh chụp */
+  --color-primary: #7CB342;       /* Xanh lá medical (bong bóng thoại, tab) */
+  --color-primary-dark: #558B2F;
+  --color-primary-soft: #C5E1A5;
+  --color-primary-bg: #F1F8E9;    /* Pastel xanh nhạt - section bg */
+
+  --color-accent: #E53935;        /* Cam đỏ "DẾ MÈN" - CTA highlight */
+  --color-accent-dark: #C62828;
+  --color-accent-soft: #FFCDD2;
+
+  --color-mascot: #8D6E63;        /* Nâu mascot */
+  --color-mascot-soft: #D7CCC8;
+
+  /* Neutral */
+  --color-bg: #FFFFFF;
+  --color-text: #2E2E2E;
+  --color-text-soft: #6B7280;
+  --color-border: #E5E7EB;
+
+  /* Status */
+  --color-warning: #F59E0B;
+  --color-danger: #DC2626;
+  --color-success: #16A34A;
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-pill: 9999px;
+}
+
+/* Map sang Tailwind v4 theme để dùng utility (bg-primary, text-accent, ...) */
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-soft: var(--color-primary-soft);
+  --color-primary-bg: var(--color-primary-bg);
+  --color-accent: var(--color-accent);
+  --color-accent-dark: var(--color-accent-dark);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-mascot: var(--color-mascot);
+  --color-text: var(--color-text);
+  --color-text-soft: var(--color-text-soft);
+  --color-border: var(--color-border);
+  --font-sans: var(--font-be-vietnam-pro), system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tăng line-height cho tiếng Việt (có dấu) */
+p, li {
+  line-height: 1.7;
+}

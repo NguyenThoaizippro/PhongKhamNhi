@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(mkdir -p /home/nguyenthoai/Project/PhongKhamDeMen/.claude/skills)",
+      "Bash(mkdir -p /home/nguyenthoai/Project/PhongKhamDeMen/workflows)",
+      "Bash(npx get-shit-done-cc *)",
+      "Bash(npx claude-mem *)",
+      "Bash(claude mcp *)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(grep -v \"\\\\.claude/commands$\\\\|\\\\.claude/agents$\\\\|\\\\.claude/hooks$\\\\|\\\\.claude/get-shit\")",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(ssh -T git@github.com)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git config *)",
+      "Bash(curl -s https://registry.npmjs.org/context-mode/latest)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('repo:', d.get\\('repository',{}\\).get\\('url','N/A'\\)\\); print\\('homepage:', d.get\\('homepage','N/A'\\)\\)\")",
+      "Bash(curl -s \"https://api.github.com/repos/mksglu/context-mode\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('name:', d.get\\('full_name','N/A'\\)\\); print\\('exists:', 'id' in d\\)\")",
+      "Bash(npm --version)",
+      "Bash(npx create-next-app@latest --help)",
+      "Bash(mkdir -p /tmp/pkdm-backup)",
+      "Bash(cp -r CLAUDE.md .claude workflows /tmp/pkdm-backup/)",
+      "Read(//tmp/**)",
+      "Bash(cp *)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir --import-alias \"@/*\" --use-npm --eslint --disable-git --yes)",
+      "Bash(rm -rf nextjs-init)",
+      "Bash(npx create-next-app@latest nextjs-init --typescript --tailwind --app --src-dir --import-alias \"@/*\" --use-npm --eslint --disable-git --yes)",
+      "Bash(rm /tmp/nextjs-init/CLAUDE.md)",
+      "Bash(cp -r /tmp/nextjs-init/. /home/nguyenthoai/Project/PhongKhamDeMen/)",
+      "Bash(npm run *)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}
