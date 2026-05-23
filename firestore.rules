@@ -1,0 +1,61 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper: kiểm tra user đã login
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Helper: kiểm tra user là doctor hoặc admin
+    function isDoctor() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['doctor', 'admin'];
+    }
+
+    // Helper: kiểm tra user là owner của doc
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // ===== users =====
+    // User chỉ đọc/sửa profile của mình. Doctor đọc được tất cả.
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isDoctor();
+      allow create: if isOwner(uid) &&
+        request.resource.data.role == 'parent';  // Chỉ tự tạo role parent
+      allow update: if isOwner(uid) &&
+        request.resource.data.role == resource.data.role;  // Không tự đổi role
+      allow delete: if false;  // Không cho xoá qua client
+    }
+
+    // ===== bookings =====
+    // Ai cũng tạo được (guest hoặc parent). Chỉ doctor/admin đọc tất cả.
+    // Parent đọc booking của chính mình.
+    match /bookings/{bookingId} {
+      allow read: if isDoctor() ||
+        (isSignedIn() && resource.data.createdBy == request.auth.uid);
+      allow create: if true;  // Cho phép guest đăng ký
+      allow update, delete: if isDoctor();
+    }
+
+    // ===== posts (blog) =====
+    // Public đọc bài đã publish. Doctor CRUD bài của mình.
+    match /posts/{postId} {
+      allow read: if resource.data.status == 'published' || isDoctor();
+      allow create: if isDoctor() &&
+        request.resource.data.authorUid == request.auth.uid;
+      allow update: if isDoctor() &&
+        resource.data.authorUid == request.auth.uid;
+      allow delete: if isDoctor() &&
+        resource.data.authorUid == request.auth.uid;
+    }
+
+    // ===== unanswered (câu hỏi chatbot chưa trả lời) =====
+    // Server (admin SDK) ghi. Doctor đọc.
+    match /unanswered/{questionId} {
+      allow read: if isDoctor();
+      allow write: if false;  // Chỉ server admin SDK ghi
+    }
+  }
+}

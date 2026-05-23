@@ -1,4 +1,20 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(npm run typecheck)",
+      "Bash(npm run lint)",
+      "Bash(npm ls *)",
+      "Bash(npm view *)",
+      "Bash(npm outdated *)",
+      "Bash(curl -s *)",
+      "Bash(curl -sI *)",
+      "WebFetch(domain:nextjs.org)",
+      "WebFetch(domain:firebase.google.com)",
+      "WebFetch(domain:react.dev)",
+      "WebFetch(domain:tailwindcss.com)",
+      "WebFetch(domain:ai.google.dev)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
