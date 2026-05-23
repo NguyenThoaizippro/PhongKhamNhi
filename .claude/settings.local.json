@@ -41,7 +41,12 @@
       "Bash(xargs -I {} cat {})",
       "Bash(python3)",
       "Bash(pkill -f \"next dev\")",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(cp \"/home/nguyenthoai/Pictures/Screenshots/Screenshot From 2026-05-23 20-39-02.png\" public/images/mascot/de-men-pointing.png)",
+      "Bash(cp \"/home/nguyenthoai/Pictures/Screenshots/Screenshot From 2026-05-23 20-38-56.png\" public/images/mascot/de-men-banner.png)",
+      "Bash(cp \"/home/nguyenthoai/Pictures/Screenshots/Screenshot From 2026-05-23 20-39-08.png\" public/images/mascot/de-men-card.png)",
+      "Bash(cp \"/home/nguyenthoai/Pictures/Screenshots/Screenshot From 2026-05-23 20-38-44.png\" public/images/mascot/de-men-specialties.png)",
+      "Bash(kill 66414)"
     ]
   }
 }
