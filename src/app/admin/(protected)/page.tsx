@@ -42,7 +42,6 @@ export default function AdminDashboardPage() {
             icon="❓"
             title="Câu hỏi chờ duyệt"
             desc="Câu hỏi chatbot chưa trả lời được"
-            todo
           />
         </div>
       </Container>

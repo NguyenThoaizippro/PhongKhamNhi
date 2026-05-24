@@ -8,7 +8,7 @@
 
 ---
 
-## ✅ Đã hoàn thành (9/13 phases)
+## ✅ Đã hoàn thành (10/13 phases)
 
 | Phase | Output |
 |-------|--------|
@@ -18,12 +18,13 @@
 | 3. Header + Hero + Footer | Sticky header, gradient hero với mascot, footer 4-col |
 | 4. Specialties + WhyUs + ClinicInfo | Grid 6 chuyên khoa, 6 lý do trust, Maps embed |
 | 5. Trang đăng ký khám | Form zod + Server Action, graceful degrade nếu chưa có Firebase |
-| 6. Auth system | **Magic Link Email + Google sign-in** + admin email/pwd, AuthProvider, UserMenu, /admin guard |
-| 7. Public blog | `/blog` list + filter chuyên khoa + `/blog/[slug]` detail + markdown render + mock fallback |
-| 8. Admin blog editor | `/admin/blog` list + new/edit form, MarkdownEditor, Cloudinary upload, Firestore CRUD |
-| 9. Chatbot UI + Gemini | Floating widget + drawer mobile, streaming SSE từ Gemini, provider-agnostic abstraction, mock fallback khi chưa có key, quick prompts gợi ý |
+| 6. Auth system | Magic Link Email + Google sign-in + admin email/pwd |
+| 7. Public blog | `/blog` list + filter + `/blog/[slug]` + markdown + mock fallback |
+| 8. Admin blog editor | `/admin/blog` CRUD, MarkdownEditor, Cloudinary upload |
+| 9. Chatbot UI + Gemini | Floating widget, streaming SSE, provider-agnostic, mock fallback |
+| 10. Sheets KB + self-learning | Inject Sheet KB vào system prompt (5-min cache), detect "chưa có thông tin" → ghi Firestore, /admin/unanswered review |
 
-**Test status:** `npm run build` ✓ pass. 18 routes generated.
+**Test status:** `npm run build` ✓ pass. 20 routes generated.
 
 **Cloudinary thay Firebase Storage:** đã setup `src/lib/cloudinary.ts` + credentials trong `.env.local`.
 

@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
 import { getLLMProvider } from "@/lib/llm";
+import { getKBEntries, formatKBForPrompt } from "@/lib/sheets/kb";
+import { isUnanswered, saveUnanswered } from "@/lib/unanswered/save";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -36,13 +38,26 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const messages = parsed.data.messages;
+  const lastUserMessage =
+    [...messages].reverse().find((m) => m.role === "user")?.content ?? "";
+
+  // Fetch KB (cached 5 min). Silent fail nếu Sheets chưa setup.
+  const kbEntries = await getKBEntries();
+  const kbContext = formatKBForPrompt(kbEntries);
+
   const provider = getLLMProvider();
   const encoder = new TextEncoder();
+  let accumulated = "";
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        for await (const chunk of provider.chat(parsed.data.messages, { signal: req.signal })) {
+        for await (const chunk of provider.chat(messages, {
+          signal: req.signal,
+          context: kbContext || undefined,
+        })) {
+          accumulated += chunk;
           controller.enqueue(encoder.encode(chunk));
         }
       } catch (err) {
@@ -55,6 +70,12 @@ export async function POST(req: NextRequest) {
         );
       } finally {
         controller.close();
+
+        // Sau khi stream xong: nếu bot không trả lời được → ghi unanswered.
+        // Best-effort, không await để không chặn close.
+        if (accumulated && lastUserMessage && isUnanswered(accumulated)) {
+          void saveUnanswered({ question: lastUserMessage, context: messages });
+        }
       }
     },
   });
@@ -64,6 +85,7 @@ export async function POST(req: NextRequest) {
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-cache, no-transform",
       "X-Provider": provider.name,
+      "X-KB-Size": String(kbEntries.length),
     },
   });
 }
