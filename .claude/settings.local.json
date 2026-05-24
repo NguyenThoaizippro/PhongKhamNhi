@@ -58,7 +58,12 @@
       "Skill(frontend-design)",
       "Bash(git reset *)",
       "mcp__plugin_context7_context7__resolve-library-id",
-      "mcp__plugin_context7_context7__query-docs"
+      "mcp__plugin_context7_context7__query-docs",
+      "Bash(command -v firebase)",
+      "Bash(firebase projects:list --json)",
+      "Bash(awk -F= '/^[A-Z_]+=/ {key=$1; val_len=length\\($0\\)-length\\($1\\)-1; printf \"%-45s len=%d\\\\n\", key, val_len}' .env.local)",
+      "Bash(npm test *)",
+      "Bash(npm uninstall *)"
     ]
   }
 }
