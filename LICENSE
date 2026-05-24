@@ -1,0 +1,53 @@
+PROPRIETARY LICENSE — Phòng Khám Nhi Đồng Dế Mèn
+
+Copyright © 2026 Nguyễn Thoại (NguyenThoaizippro)
+All rights reserved.
+
+Toàn bộ mã nguồn, tài sản thiết kế (bao gồm nhưng không giới hạn: logo,
+mascot Dế Mèn, color palette, layout, UI components, văn bản marketing,
+prompt chatbot, và knowledge base structure) thuộc sở hữu độc quyền của
+Nguyễn Thoại.
+
+KHÔNG ĐƯỢC PHÉP, NẾU CHƯA CÓ SỰ ĐỒNG Ý BẰNG VĂN BẢN CỦA TÁC GIẢ:
+
+  1. Sao chép, sửa đổi, phân phối lại, hoặc công khai mã nguồn dưới
+     bất kỳ hình thức nào (kể cả trên các nền tảng mã nguồn mở).
+
+  2. Sử dụng cho mục đích thương mại — bao gồm bán lại, cung cấp dịch vụ
+     có thu phí, hoặc tích hợp vào sản phẩm/dịch vụ thương mại khác.
+
+  3. Reverse engineer, decompile, disassemble, hoặc tạo derivative works
+     dựa trên dự án này.
+
+  4. Sử dụng logo, tên thương hiệu "Dế Mèn", mascot, hoặc bất kỳ phần nào
+     của brand identity cho dự án khác.
+
+  5. Loại bỏ hoặc thay đổi các thông báo bản quyền (copyright notice)
+     trong source code và documentation.
+
+CHO PHÉP (KHÔNG CẦN XIN PHÉP):
+
+  - Xem mã nguồn để học tập cá nhân, không thương mại.
+  - Fork repository trên GitHub để tham khảo, với điều kiện không
+    deploy/publish bản fork ra public domain.
+  - Trích dẫn snippet nhỏ (< 50 dòng) trong bài viết kỹ thuật, có ghi
+    nguồn rõ ràng kèm link về repository gốc.
+
+KHÔNG BẢO HÀNH:
+
+Phần mềm được cung cấp "AS IS", không kèm bất kỳ bảo hành nào, dù rõ ràng
+hay ngầm định, bao gồm nhưng không giới hạn ở các bảo đảm về khả năng
+thương mại hoá, tính phù hợp cho một mục đích cụ thể, và không vi phạm
+quyền sở hữu trí tuệ.
+
+Trong mọi trường hợp, tác giả KHÔNG chịu trách nhiệm cho bất kỳ thiệt hại
+nào (trực tiếp, gián tiếp, ngẫu nhiên, đặc biệt, hoặc hệ quả) phát sinh
+từ việc sử dụng hoặc không thể sử dụng phần mềm này.
+
+LIÊN HỆ CẤP PHÉP
+
+Mọi yêu cầu sử dụng vượt phạm vi giấy phép này, vui lòng liên hệ:
+
+  Tác giả : Nguyễn Thoại
+  GitHub  : https://github.com/NguyenThoaizippro
+  Repo    : https://github.com/NguyenThoaizippro/PhongKhamNhi
