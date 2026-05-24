@@ -29,7 +29,6 @@ export default function AdminDashboardPage() {
             icon="📅"
             title="Lịch khám"
             desc="Xem và xác nhận đặt lịch của phụ huynh"
-            todo
           />
           <AdminCard
             href="/admin/blog"

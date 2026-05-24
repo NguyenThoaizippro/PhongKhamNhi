@@ -11,7 +11,14 @@ import { Button } from "@/components/ui/Button";
 
 const initialState: BookingActionState = { status: "idle" };
 
-export function BookingForm() {
+interface BookingFormProps {
+  prefillName?: string;
+  prefillEmail?: string;
+  /** Firebase ID token — gửi qua hidden input để server verify UID */
+  idToken?: string | null;
+}
+
+export function BookingForm({ prefillName, prefillEmail, idToken }: BookingFormProps = {}) {
   const [state, formAction] = useActionState(submitBooking, initialState);
 
   // Tính min/max date cho input
@@ -32,16 +39,17 @@ export function BookingForm() {
         </h2>
         <p className="mt-3 text-[color:var(--color-text)]">
           Phòng khám sẽ gọi xác nhận trong vòng 24 giờ qua số điện thoại bạn cung cấp.
+          {prefillEmail ? " Email xác nhận đã được gửi vào hộp thư của ba mẹ." : ""}
         </p>
         <p className="mt-2 text-sm text-[color:var(--color-text-soft)]">
           Mã đặt lịch: <code className="font-mono">{state.bookingId}</code>
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-          <Button href="/" variant="primary" size="md">
-            Về trang chủ
+          <Button href="/tai-khoan/lich-su-kham" variant="primary" size="md">
+            Xem lịch sử đặt lịch
           </Button>
           <Button href="tel:0985350570" variant="outline" size="md">
-            Gọi xác nhận ngay: 0985.350.570
+            Gọi: 0985.350.570
           </Button>
         </div>
       </div>
@@ -53,6 +61,7 @@ export function BookingForm() {
 
   return (
     <form action={formAction} className="space-y-6" noValidate>
+      {idToken && <input type="hidden" name="idToken" value={idToken} />}
       {state.status === "error" && !state.fieldErrors && (
         <div
           role="alert"
@@ -95,6 +104,7 @@ export function BookingForm() {
           error={fieldErr("parentName")}
           autoComplete="name"
           placeholder="VD: Trần Thị Mai"
+          defaultValue={prefillName}
         />
         <Field
           label="Số điện thoại"
@@ -106,6 +116,16 @@ export function BookingForm() {
           placeholder="0985350570"
           inputMode="numeric"
           maxLength={10}
+        />
+        <Field
+          label="Email (để nhận xác nhận đặt lịch)"
+          name="parentEmail"
+          type="email"
+          error={fieldErr("parentEmail")}
+          autoComplete="email"
+          placeholder="phuhuynh@gmail.com"
+          inputMode="email"
+          defaultValue={prefillEmail}
         />
       </fieldset>
 

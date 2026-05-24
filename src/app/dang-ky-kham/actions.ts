@@ -11,15 +11,18 @@ export type BookingActionState =
 /**
  * Server Action xử lý đăng ký khám.
  * 1. Validate input bằng zod
- * 2. Lưu Firestore (nếu có credentials) hoặc log + skip (dev mode)
- * 3. (Phase sau) Gửi email confirmation
+ * 2. Verify idToken (nếu có) để attach UID + email vào booking
+ * 3. Lưu Firestore (nếu có credentials) hoặc log + skip (dev mode)
+ * 4. Gửi email confirm cho PH + notify BS Đông (best-effort)
  */
 export async function submitBooking(
   _prevState: BookingActionState,
   formData: FormData
 ): Promise<BookingActionState> {
-  // 1. Parse + validate
+  // 1. Parse + validate (loại idToken vì không thuộc schema)
   const raw = Object.fromEntries(formData.entries());
+  const idToken = typeof raw.idToken === "string" ? raw.idToken : undefined;
+  delete raw.idToken;
   const parsed = bookingSchema.safeParse(raw);
 
   if (!parsed.success) {
@@ -57,6 +60,20 @@ export async function submitBooking(
     };
   }
 
+  // 3. Verify idToken (nếu có) — extract UID + email từ Firebase Auth
+  let uid: string | null = null;
+  let verifiedEmail: string | null = null;
+  if (idToken) {
+    try {
+      const { adminAuth } = await import("@/lib/firebase/admin");
+      const decoded = await adminAuth.verifyIdToken(idToken);
+      uid = decoded.uid;
+      verifiedEmail = decoded.email ?? null;
+    } catch (err) {
+      console.warn("[booking] idToken không hợp lệ — fallback guest mode:", err);
+    }
+  }
+
   try {
     const { adminDb } = await import("@/lib/firebase/admin");
     const docRef = await adminDb.collection("bookings").add({
@@ -64,17 +81,33 @@ export async function submitBooking(
       childBirthDate: data.childBirthDate,
       parentName: data.parentName,
       parentPhone: data.parentPhone,
+      parentEmail: data.parentEmail || verifiedEmail || null,
       specialty: data.specialty,
       preferredDate: data.preferredDate,
       preferredTimeSlot: data.preferredTimeSlot,
       symptoms: data.symptoms ?? "",
       status: "pending",
+      source: "web-form",
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
-      createdBy: null, // sẽ wire user uid ở Phase 6
+      createdBy: uid,
     });
 
-    // TODO Phase 10/12: gửi email confirmation cho parent + notification cho clinic
+    // Best-effort: gửi email confirm cho PH + notify BS Đông (không block return)
+    const { notifyBookingCreated } = await import("@/lib/email/booking-emails");
+    void notifyBookingCreated({
+      bookingId: docRef.id,
+      childName: data.childName,
+      childBirthDate: data.childBirthDate,
+      parentName: data.parentName,
+      parentPhone: data.parentPhone,
+      parentEmail: data.parentEmail || verifiedEmail || undefined,
+      specialty: data.specialty,
+      preferredDate: data.preferredDate,
+      preferredTimeSlot: data.preferredTimeSlot,
+      symptoms: data.symptoms,
+    });
+
     return { status: "success", bookingId: docRef.id };
   } catch (err) {
     console.error("[booking] Firestore error:", err);

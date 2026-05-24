@@ -10,10 +10,10 @@ describe("WhyUs", () => {
     expect(cards).toHaveLength(6);
   });
 
-  it("reference BS Đồng — bác sĩ chính", () => {
+  it("reference BS Đông — bác sĩ chính", () => {
     render(<WhyUs />);
-    // BS Đồng xuất hiện ở title card 1 + body card 3
-    expect(screen.getAllByText(/bác sĩ đồng/i).length).toBeGreaterThanOrEqual(1);
+    // BS Đông xuất hiện ở title card 1 + body card 3
+    expect(screen.getAllByText(/bác sĩ Đông/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it("nhắc cấp cứu 115", () => {

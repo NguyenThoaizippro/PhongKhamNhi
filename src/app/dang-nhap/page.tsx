@@ -7,10 +7,34 @@ import { CLINIC } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Đăng nhập — Phòng Khám Nhi Đồng Dế Mèn",
-  description: `Đăng nhập tài khoản phụ huynh tại ${CLINIC.name} để theo dõi lịch khám và lịch sử khám của bé.`,
+  description: `Đăng nhập tài khoản phụ huynh tại ${CLINIC.name} để theo dõi lịch khám và lịch sử của bé.`,
 };
 
-export default function LoginPage() {
+// Whitelist redirect targets — tránh open-redirect attack
+const VALID_REDIRECTS = new Set([
+  "/",
+  "/dang-ky-kham",
+  "/tai-khoan/lich-su-kham",
+  "/blog",
+]);
+
+function sanitizeRedirect(input: string | undefined): string {
+  if (!input) return "/";
+  if (!input.startsWith("/")) return "/";
+  if (input.startsWith("//")) return "/";
+  if (VALID_REDIRECTS.has(input)) return input;
+  if (input.startsWith("/blog/")) return input;
+  return "/";
+}
+
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirect?: string }>;
+}) {
+  const params = await searchParams;
+  const redirectTo = sanitizeRedirect(params.redirect);
+
   return (
     <main className="py-12 sm:py-16 bg-[color:var(--color-primary-bg)] min-h-[calc(100vh-200px)]">
       <Container size="narrow">
@@ -22,12 +46,12 @@ export default function LoginPage() {
             Đăng nhập <span className="text-[color:var(--color-accent)]">Dế Mèn</span>
           </h1>
           <p className="mt-3 text-[color:var(--color-text-soft)]">
-            Đăng nhập để theo dõi lịch khám và lịch sử của bé.
+            Đăng nhập để đặt lịch và theo dõi lịch sử khám của bé.
           </p>
         </header>
 
         <div className="bg-white rounded-2xl shadow-lg border border-[color:var(--color-border)] p-6 sm:p-8">
-          <GoogleSignInButton redirectTo="/" />
+          <GoogleSignInButton redirectTo={redirectTo} />
 
           <div className="my-6 flex items-center gap-3 text-xs text-[color:var(--color-text-soft)]">
             <span className="flex-1 h-px bg-[color:var(--color-border)]" />
@@ -35,7 +59,7 @@ export default function LoginPage() {
             <span className="flex-1 h-px bg-[color:var(--color-border)]" />
           </div>
 
-          <MagicLinkForm redirectTo="/" />
+          <MagicLinkForm redirectTo={redirectTo} />
         </div>
 
         <p className="mt-6 text-center text-xs text-[color:var(--color-text-soft)]">

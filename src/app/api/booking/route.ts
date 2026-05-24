@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
       childBirthDate: data.childBirthDate,
       parentName: data.parentName,
       parentPhone: data.parentPhone,
+      parentEmail: data.parentEmail || null,
       specialty: data.specialty,
       preferredDate: data.preferredDate,
       preferredTimeSlot: data.preferredTimeSlot,
@@ -60,6 +61,22 @@ export async function POST(req: NextRequest) {
       updatedAt: FieldValue.serverTimestamp(),
       createdBy: null,
     });
+
+    // Best-effort email notify — không block response
+    const { notifyBookingCreated } = await import("@/lib/email/booking-emails");
+    void notifyBookingCreated({
+      bookingId: docRef.id,
+      childName: data.childName,
+      childBirthDate: data.childBirthDate,
+      parentName: data.parentName,
+      parentPhone: data.parentPhone,
+      parentEmail: data.parentEmail || undefined,
+      specialty: data.specialty,
+      preferredDate: data.preferredDate,
+      preferredTimeSlot: data.preferredTimeSlot,
+      symptoms: data.symptoms,
+    });
+
     return Response.json({ bookingId: docRef.id, source: "chatbot" });
   } catch (err) {
     console.error("[booking/api] Firestore error:", err);

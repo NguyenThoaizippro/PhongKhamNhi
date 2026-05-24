@@ -46,6 +46,8 @@ export function extractBookingDraft(content: string): {
         childBirthDate: parsed.childBirthDate,
         parentName: parsed.parentName,
         parentPhone: parsed.parentPhone,
+        parentEmail:
+          typeof parsed.parentEmail === "string" ? parsed.parentEmail : "",
         specialty: parsed.specialty,
         preferredDate: parsed.preferredDate,
         preferredTimeSlot: parsed.preferredTimeSlot,

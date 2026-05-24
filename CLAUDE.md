@@ -5,7 +5,7 @@ Dự án website cho **Phòng Khám Nhi Đồng Dế Mèn** — phòng khám chu
 
 ## Brand
 - **Tên:** Phòng Khám Nhi Đồng Dế Mèn
-- **Bác sĩ chính:** Bác sĩ Đồng — Chuyên khoa Nhi, **thạo cả 6 chuyên khoa** (hô hấp, tiêu hoá, truyền nhiễm, sơ sinh, dinh dưỡng, da liễu). Là tác giả các bài blog y khoa trên site.
+- **Bác sĩ chính:** Bác sĩ Đông — Chuyên khoa Nhi, **thạo cả 6 chuyên khoa** (hô hấp, tiêu hoá, truyền nhiễm, sơ sinh, dinh dưỡng, da liễu). Là tác giả các bài blog y khoa trên site.
 - **Mascot:** Chú dế mèn mặc áo blouse trắng, cầm ống nghe
 - **Slogan:** "Bác sĩ xinh – Dùng thuốc xịn – Trẻ hết bệnh – Sáng thông minh"
 - **Giờ làm việc:** 16h30 – 20h30 (tất cả ngày trong tuần)

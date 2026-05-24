@@ -49,6 +49,12 @@ export const bookingSchema = z.object({
     .string()
     .trim()
     .regex(VN_PHONE_REGEX, "Số điện thoại không đúng định dạng VN (VD: 0985350570)"),
+  parentEmail: z
+    .string()
+    .trim()
+    .email("Email không hợp lệ")
+    .optional()
+    .or(z.literal("")),
   specialty: z.enum(SPECIALTY_SLUGS, { message: "Vui lòng chọn chuyên khoa" }),
   preferredDate: z
     .string()

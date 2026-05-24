@@ -22,7 +22,7 @@ describe("Hero", () => {
     expect(phoneLink).toHaveAttribute("href", "tel:0985350570");
   });
 
-  it("hiển thị badge BS Đồng — bác sĩ chính 6 chuyên khoa", () => {
+  it("hiển thị badge BS Đông — bác sĩ chính 6 chuyên khoa", () => {
     render(<Hero />);
     expect(screen.getByText(/bác sĩ chính · thạo cả 6 chuyên khoa nhi/i)).toBeInTheDocument();
   });

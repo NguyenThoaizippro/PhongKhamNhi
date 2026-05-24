@@ -90,6 +90,14 @@ export function UserMenu() {
           >
             📅 Đăng ký khám
           </Link>
+          <Link
+            role="menuitem"
+            href="/tai-khoan/lich-su-kham"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2 text-sm hover:bg-[color:var(--color-primary-bg)]"
+          >
+            📋 Lịch sử đặt lịch
+          </Link>
           <button
             role="menuitem"
             type="button"

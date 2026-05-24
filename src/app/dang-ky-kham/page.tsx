@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
-import { BookingForm } from "./BookingForm";
+import { BookingGate } from "./BookingGate";
 import { CLINIC } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -21,12 +21,12 @@ export default function BookingPage() {
             <span className="text-[color:var(--color-accent)]">Dế Mèn</span>
           </h1>
           <p className="mt-3 text-[color:var(--color-text-soft)]">
-            Điền thông tin bên dưới, phòng khám sẽ gọi xác nhận trong 24 giờ.
+            Đăng nhập, điền thông tin và phòng khám sẽ gọi xác nhận trong 24 giờ.
           </p>
         </header>
 
         <div className="bg-white rounded-2xl shadow-lg border border-[color:var(--color-border)] p-6 sm:p-8 lg:p-10">
-          <BookingForm />
+          <BookingGate />
         </div>
 
         <aside className="mt-6 text-center text-sm text-[color:var(--color-text-soft)]">

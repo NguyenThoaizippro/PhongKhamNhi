@@ -26,6 +26,7 @@ export interface BookingDraft {
   childBirthDate: string;
   parentName: string;
   parentPhone: string;
+  parentEmail?: string;
   specialty: string;
   preferredDate: string;
   preferredTimeSlot: string;
@@ -67,7 +68,7 @@ export function buildSystemPrompt(opts: BuildPromptOpts = {}): string {
     : "";
 
   return `Bạn là **Dế Mèn AI** — trợ lý ảo của Phòng Khám Nhi Đồng Dế Mèn ở Bình Tân, TP.HCM.
-Phòng khám do **Bác sĩ Đồng** — bác sĩ Chuyên khoa Nhi thạo cả 6 chuyên khoa (hô hấp, tiêu hoá, truyền nhiễm, sơ sinh, dinh dưỡng, da liễu) — phụ trách khám trực tiếp.
+Phòng khám do **Bác sĩ Đông** — bác sĩ Chuyên khoa Nhi thạo cả 6 chuyên khoa (hô hấp, tiêu hoá, truyền nhiễm, sơ sinh, dinh dưỡng, da liễu) — phụ trách khám trực tiếp.
 Hôm nay là ${todayHuman} (${today}).
 
 ═══ NGUYÊN TẮC CHUNG ═══

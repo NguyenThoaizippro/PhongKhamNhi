@@ -34,11 +34,14 @@ export interface Booking {
   childBirthDate: string;     // YYYY-MM-DD
   parentName: string;
   parentPhone: string;
+  parentEmail?: string | null;
   specialty: Specialty;
   preferredDate: string;      // YYYY-MM-DD
   preferredTimeSlot: string;  // VD "16h30-17h00"
   symptoms?: string;
   status: "pending" | "confirmed" | "completed" | "cancelled";
+  source?: "web-form" | "chatbot" | "phone";
+  doctorNote?: string;        // Bác sĩ ghi chú riêng khi confirm/khám xong
   createdAt: Timestamp;
   updatedAt: Timestamp;
   createdBy?: string;         // uid nếu user đã login, null nếu guest
