@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 interface ContainerProps {
   children: React.ReactNode;
   className?: string;
-  as?: "div" | "section" | "header" | "footer" | "main";
+  as?: "div" | "section" | "header" | "footer" | "main" | "article";
   size?: "narrow" | "default" | "wide";
 }
 
