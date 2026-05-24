@@ -36,7 +36,6 @@ export default function AdminDashboardPage() {
             icon="📝"
             title="Viết blog"
             desc="Đăng bài chia sẻ kiến thức nhi khoa"
-            todo
           />
           <AdminCard
             href="/admin/unanswered"

@@ -117,3 +117,45 @@ export async function getAllPublishedSlugs(): Promise<string[]> {
     return MOCK_POSTS.map((p) => p.slug);
   }
 }
+
+/**
+ * Cho admin: lấy TẤT CẢ bài (cả draft) sắp theo updatedAt desc.
+ */
+export async function getAllPostsForAdmin(): Promise<
+  Array<BlogPostView & { status: "draft" | "published" }>
+> {
+  const db = await getAdminDb();
+  if (!db) return [];
+
+  try {
+    const snap = await db.collection("posts").orderBy("updatedAt", "desc").limit(100).get();
+    return snap.docs.map((d) => {
+      const data = d.data() as PostDoc & { status?: "draft" | "published" };
+      return {
+        ...docToView(d.id, data),
+        status: data.status === "published" ? "published" : "draft",
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+export async function getPostByIdForAdmin(
+  id: string
+): Promise<(BlogPostView & { status: "draft" | "published" }) | null> {
+  const db = await getAdminDb();
+  if (!db) return null;
+
+  try {
+    const doc = await db.collection("posts").doc(id).get();
+    if (!doc.exists) return null;
+    const data = doc.data() as PostDoc & { status?: "draft" | "published" };
+    return {
+      ...docToView(doc.id, data),
+      status: data.status === "published" ? "published" : "draft",
+    };
+  } catch {
+    return null;
+  }
+}

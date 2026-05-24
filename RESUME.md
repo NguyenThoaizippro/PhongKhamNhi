@@ -2,13 +2,13 @@
 
 > **Đọc file này đầu mỗi session mới để biết đang ở đâu, tiếp tục gì.**
 
-**Last session:** 2026-05-23
+**Last session:** 2026-05-24
 **Repo:** https://github.com/NguyenThoaizippro/PhongKhamNhi
 **Last commit:** `feat(booking): trang đăng ký khám với form + Server Action + Firestore`
 
 ---
 
-## ✅ Đã hoàn thành (5/13 phases)
+## ✅ Đã hoàn thành (8/13 phases)
 
 | Phase | Output |
 |-------|--------|
@@ -18,8 +18,13 @@
 | 3. Header + Hero + Footer | Sticky header, gradient hero với mascot, footer 4-col |
 | 4. Specialties + WhyUs + ClinicInfo | Grid 6 chuyên khoa, 6 lý do trust, Maps embed |
 | 5. Trang đăng ký khám | Form zod + Server Action, graceful degrade nếu chưa có Firebase |
+| 6. Auth system | **Magic Link Email + Google sign-in** + admin email/pwd, AuthProvider, UserMenu, /admin guard |
+| 7. Public blog | `/blog` list + filter chuyên khoa + `/blog/[slug]` detail + markdown render + mock fallback |
+| 8. Admin blog editor | `/admin/blog` list + new/edit form, MarkdownEditor (split preview), Cloudinary upload API, Firestore CRUD qua API routes (Bearer token) |
 
-**Test status:** `npm run build` ✓ pass. Routes: `/`, `/dang-ky-kham`.
+**Test status:** `npm run build` ✓ pass. 17 routes generated.
+
+**Cloudinary thay Firebase Storage:** đã setup `src/lib/cloudinary.ts` + credentials trong `.env.local`.
 
 ---
 
@@ -59,10 +64,9 @@
 
 | # | Phase | Cần keys gì |
 |---|-------|-------------|
-| 7 | Phase 6: Auth system (OTP + Google + admin) | Firebase ✓ A |
 | 8 | Phase 7: Public blog UI + Firestore | Firebase ✓ A |
-| 9 | Phase 8: Admin blog editor | Firebase ✓ A |
-| 10 | **Phase 9: Chatbot UI + Gemini** ← đề xuất làm tiếp | Gemini ✓ B (graceful degrade nếu chưa) |
+| 9 | Phase 8: Admin blog editor (Cloudinary upload) | Firebase ✓ A |
+| 10 | **Phase 9: Chatbot UI + Gemini** | Gemini ✓ B (graceful degrade nếu chưa) |
 | 11 | Phase 10: Sheets KB + self-learning | Gemini + Sheets ✓ B + C |
 | 12 | Phase 11: Booking qua chatbot | Cả 3 |
 | 13 | Phase 12: Polish + SEO + deploy Vercel | Tất cả |
