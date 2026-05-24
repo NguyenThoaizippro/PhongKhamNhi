@@ -3,6 +3,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { ChatMessage, type ChatMsg } from "./ChatMessage";
+import { BookingConfirmCard } from "./BookingConfirmCard";
+import { extractBookingDraft } from "@/lib/llm/booking-parser";
+import type { BookingDraft } from "@/lib/llm/types";
 import { cn } from "@/lib/utils";
 
 const INITIAL_GREETING: ChatMsg = {
@@ -15,7 +18,7 @@ const QUICK_PROMPTS = [
   "Bé sốt 38.5°C, có cần đi khám không?",
   "Phòng khám mở cửa lúc mấy giờ?",
   "Bé bị tiêu chảy 2 ngày",
-  "Làm sao để đặt lịch khám?",
+  "Mình muốn đặt lịch khám cho bé",
 ];
 
 export function ChatWidget() {
@@ -23,6 +26,7 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<ChatMsg[]>([INITIAL_GREETING]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [pendingBooking, setPendingBooking] = useState<BookingDraft | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -89,12 +93,17 @@ export function ChatWidget() {
           const { done, value } = await reader.read();
           if (done) break;
           accumulated += decoder.decode(value, { stream: true });
+          const { cleaned } = extractBookingDraft(accumulated);
           setMessages((prev) => {
             const copy = [...prev];
-            copy[copy.length - 1] = { role: "assistant", content: accumulated };
+            copy[copy.length - 1] = { role: "assistant", content: cleaned };
             return copy;
           });
         }
+
+        // Stream done — parse booking draft (nếu có) sau khi đã có full content
+        const { draft } = extractBookingDraft(accumulated);
+        if (draft) setPendingBooking(draft);
       } catch (err) {
         if (err instanceof Error && err.name === "AbortError") return;
         setMessages((prev) => {
@@ -213,6 +222,34 @@ export function ChatWidget() {
           {messages.map((m, i) => (
             <ChatMessage key={i} message={m} />
           ))}
+
+          {/* Booking confirm card — render khi LLM emit draft */}
+          {pendingBooking && (
+            <BookingConfirmCard
+              draft={pendingBooking}
+              onConfirmed={(bookingId) => {
+                setPendingBooking(null);
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    role: "assistant",
+                    content: `🎉 Đã ghi nhận đặt lịch khám. Mã đặt lịch: **${bookingId}**.\n\nPhòng khám sẽ gọi xác nhận trong 24h. Cảm ơn ba mẹ đã tin tưởng Dế Mèn!`,
+                  },
+                ]);
+              }}
+              onCancel={() => {
+                setPendingBooking(null);
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    role: "assistant",
+                    content:
+                      "Đã huỷ đặt lịch. Nếu ba mẹ cần hỗ trợ thêm cứ nhắn mình nhé. Hoặc gọi **0985.350.570** để được tư vấn trực tiếp.",
+                  },
+                ]);
+              }}
+            />
+          )}
 
           {/* Quick prompts (chỉ hiện khi chưa chat gì) */}
           {messages.length === 1 && (

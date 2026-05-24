@@ -46,7 +46,19 @@
       "Bash(cp \"/home/nguyenthoai/Pictures/Screenshots/Screenshot From 2026-05-23 20-38-56.png\" public/images/mascot/de-men-banner.png)",
       "Bash(cp \"/home/nguyenthoai/Pictures/Screenshots/Screenshot From 2026-05-23 20-39-08.png\" public/images/mascot/de-men-card.png)",
       "Bash(cp \"/home/nguyenthoai/Pictures/Screenshots/Screenshot From 2026-05-23 20-38-44.png\" public/images/mascot/de-men-specialties.png)",
-      "Bash(kill 66414)"
+      "Bash(kill 66414)",
+      "Bash(git commit *)",
+      "Bash(kill 66439)",
+      "Bash(echo \"PID: $!\")",
+      "mcp__plugin_serena_serena__write_memory",
+      "mcp__plugin_serena_serena__activate_project",
+      "Skill(karpathy-guidelines)",
+      "Bash(grep -E \"\\\\.\\(md|txt\\)$\")",
+      "Bash(npm list *)",
+      "Skill(frontend-design)",
+      "Bash(git reset *)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs"
     ]
   }
 }

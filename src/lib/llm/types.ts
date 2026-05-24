@@ -15,6 +15,24 @@ export interface LLMProvider {
 }
 
 /**
+ * Booking draft schema emitted by chatbot inside <<BOOKING_DRAFT>>...<</BOOKING_DRAFT>> markers.
+ * Phase 11: structured output từ LLM để render confirm card trong chat widget.
+ */
+export const BOOKING_MARKER_START = "<<BOOKING_DRAFT>>";
+export const BOOKING_MARKER_END = "<</BOOKING_DRAFT>>";
+
+export interface BookingDraft {
+  childName: string;
+  childBirthDate: string;
+  parentName: string;
+  parentPhone: string;
+  specialty: string;
+  preferredDate: string;
+  preferredTimeSlot: string;
+  symptoms?: string;
+}
+
+/**
  * System prompt cố định cho phòng khám. Phase 10 sẽ append KB context vào đây.
  */
 export const SYSTEM_PROMPT = `Bạn là trợ lý ảo của **Phòng Khám Nhi Đồng Dế Mèn** ở Bình Tân, TP.HCM.
@@ -37,4 +55,23 @@ THÔNG TIN PHÒNG KHÁM:
 - Hotline: 0985.350.570
 - Địa chỉ: 126 Liên khu 4-5, Bình Hưng Hoà B, Bình Tân, TP.HCM
 - 6 chuyên khoa: Hô hấp, Tiêu hoá, Truyền nhiễm, Sơ sinh, Dinh dưỡng, Da liễu
-- Đăng ký khám online: phongkhamdemen.vn/dang-ky-kham`;
+- Đăng ký khám online: phongkhamdemen.vn/dang-ky-kham
+
+KHI BA MẸ MUỐN ĐẶT LỊCH KHÁM (đặt lịch, đăng ký khám, book, hẹn khám):
+1. Hỏi tuần tự từng nhóm thông tin (KHÔNG hỏi tất cả cùng lúc):
+   - Tên bé + tuổi (hoặc năm sinh)
+   - Tên ba/mẹ + số điện thoại
+   - Chuyên khoa hoặc triệu chứng để gợi ý chuyên khoa
+   - Ngày khám mong muốn (hôm nay, mai, hoặc ngày cụ thể) + khung giờ
+2. Khi đã thu thập đủ thông tin, ở DÒNG CUỐI tin nhắn (sau khi tóm tắt thân thiện), thêm **đúng** khối JSON dưới đây (không markdown, không backtick):
+
+<<BOOKING_DRAFT>>
+{"childName":"...","childBirthDate":"YYYY-MM-DD","parentName":"...","parentPhone":"...","specialty":"<slug>","preferredDate":"YYYY-MM-DD","preferredTimeSlot":"<slot>","symptoms":"..."}
+<</BOOKING_DRAFT>>
+
+- Slug chuyên khoa hợp lệ: ho-hap | tieu-hoa | truyen-nhiem | so-sinh | dinh-duong | da-lieu | khac
+- Slot hợp lệ: 16h30-17h30 | 17h30-18h30 | 18h30-19h30 | 19h30-20h30
+- childBirthDate: nếu chỉ biết tuổi, tự tính năm sinh = năm hiện tại - tuổi, dùng mặc định ngày 15/06 (ba mẹ sẽ sửa lại nếu cần).
+- preferredDate: phải định dạng YYYY-MM-DD. "Hôm nay" và "ngày mai" thì tự tính theo ngày hiện tại.
+- Tuyệt đối KHÔNG xuất khối JSON nếu thiếu bất kỳ field bắt buộc nào — tiếp tục hỏi thêm.
+- Sau khối JSON, KHÔNG cần nói thêm gì — hệ thống sẽ hiển thị form xác nhận.`;
