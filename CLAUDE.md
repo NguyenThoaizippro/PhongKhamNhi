@@ -105,6 +105,20 @@ src/
 - Mỗi phase xong: review → commit → push GitHub → Vercel auto deploy preview
 - Phase 0-2: Setup. Phase 3-5: Landing + booking. Phase 6-8: Auth + blog. Phase 9-11: Chatbot. Phase 12: Polish.
 
+## Testing Strategy (quyết định 2026-05-24)
+**KHÔNG áp dụng TDD strict trong giai đoạn này.** Lý do: ưu tiên hoàn thành 13 phases trước, test sau.
+
+- ❌ **KHÔNG** viết test trước (skip Iron Law của TDD skill)
+- ❌ **KHÔNG** back-fill test cho Phase 0-10 đã xong
+- ✅ Sau khi hoàn thành 13 phases, **mới thêm test cho các phase quan trọng**:
+  - Validation forms (booking, post, auth) — `src/lib/validation/*`
+  - API routes (auth verify, post CRUD, chat) — `src/app/api/**`
+  - LLM provider abstraction + KB integration — `src/lib/llm/*`, `src/lib/sheets/*`
+- ✅ Bug xuất hiện → debug bằng skill `superpowers:systematic-debugging`, fix kèm test regression
+- ✅ Test runner đề xuất: **Vitest** (chuẩn Next.js 16 + ESM)
+
+> Skill `superpowers:test-driven-development` đã load nhưng được override bởi rule này. Khi sang giai đoạn thêm test, sẽ enforce TDD strict cho code mới.
+
 ## Installed Tools
 - **GSD v1.42.3** — Workflow framework (local, `.claude/`)
 - **Claude Mem v13.3.0** — Persistent memory (worker: `npx claude-mem start`, port 37700)

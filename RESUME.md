@@ -4,7 +4,9 @@
 
 **Last session:** 2026-05-24
 **Repo:** https://github.com/NguyenThoaizippro/PhongKhamNhi
-**Last commit:** `feat(booking): trang đăng ký khám với form + Server Action + Firestore`
+**Last commit:** `feat(chatbot): Google Sheets KB + self-learning unanswered loop`
+
+**⚠️ Decision đã chốt (2026-05-24):** TDD tạm hoãn — finish 13 phases trước, test các phase quan trọng sau. Xem `CLAUDE.md` section "Testing Strategy".
 
 ---
 
