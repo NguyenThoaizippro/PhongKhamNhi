@@ -1,8 +1,28 @@
-import { SYSTEM_PROMPT, type ChatMessage, type ChatOptions, type LLMProvider } from "./types";
+import {
+  buildSystemPrompt,
+  type ChatMessage,
+  type ChatOptions,
+  type LLMProvider,
+} from "./types";
+
+// Lỗi tạm thời (overload, rate limit, gateway) — nên retry
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+const MAX_RETRIES = 2;
+
+/**
+ * Custom error để route.ts có thể nhận biết overload và trả message phù hợp.
+ */
+export class GeminiOverloadError extends Error {
+  constructor(public readonly status: number) {
+    super(`Gemini API ${status}: high demand / rate limit`);
+    this.name = "GeminiOverloadError";
+  }
+}
 
 /**
  * Gemini provider — gọi trực tiếp REST API (không cần SDK, tránh lock-in version).
  * Endpoint: streamGenerateContent với SSE.
+ * Tự retry 2 lần với exponential backoff khi gặp 429/500/502/503/504.
  */
 export const geminiProvider: LLMProvider = {
   name: "gemini",
@@ -14,9 +34,7 @@ export const geminiProvider: LLMProvider = {
     const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`;
 
-    const systemText = opts.context
-      ? `${SYSTEM_PROMPT}\n\n=== KIẾN THỨC PHÒNG KHÁM ===\n${opts.context}`
-      : SYSTEM_PROMPT;
+    const systemText = buildSystemPrompt({ kbContext: opts.context });
 
     const body = {
       contents: messages.map((m) => ({
@@ -37,16 +55,38 @@ export const geminiProvider: LLMProvider = {
       ],
     };
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      signal: opts.signal,
-    });
+    // Retry loop với exponential backoff: 0ms → 800ms → 2400ms
+    let lastStatus = 0;
+    let res: Response | null = null;
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      if (attempt > 0) {
+        const wait = 800 * Math.pow(3, attempt - 1);
+        await new Promise((r) => setTimeout(r, wait));
+      }
+      try {
+        res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          signal: opts.signal,
+        });
+        if (res.ok && res.body) break;
+        lastStatus = res.status;
+        if (!RETRYABLE_STATUS.has(res.status)) break;
+        // 4xx khác (vd 400) → không retry
+      } catch (err) {
+        if (opts.signal?.aborted) throw err;
+        lastStatus = 0; // network error
+        if (attempt === MAX_RETRIES) throw err;
+      }
+    }
 
-    if (!res.ok || !res.body) {
-      const errText = await res.text().catch(() => "");
-      throw new Error(`Gemini API ${res.status}: ${errText.slice(0, 300)}`);
+    if (!res || !res.ok || !res.body) {
+      const errText = res ? await res.text().catch(() => "") : "";
+      if (RETRYABLE_STATUS.has(lastStatus)) {
+        throw new GeminiOverloadError(lastStatus);
+      }
+      throw new Error(`Gemini API ${lastStatus}: ${errText.slice(0, 300)}`);
     }
 
     const reader = res.body.getReader();

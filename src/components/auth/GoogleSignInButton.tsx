@@ -2,8 +2,32 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, type AuthError } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
+
+// Map Firebase Auth error codes → tiếng Việt thân thiện + gợi ý fix
+function friendlyAuthError(code: string): string | null {
+  switch (code) {
+    case "auth/popup-closed-by-user":
+    case "auth/cancelled-popup-request":
+    case "auth/user-cancelled":
+      return null; // user tự đóng, không hiển thị lỗi
+    case "auth/popup-blocked":
+      return "Trình duyệt chặn popup. Ba mẹ vui lòng cho phép popup từ trang này rồi thử lại.";
+    case "auth/operation-not-allowed":
+      return "Đăng nhập Google chưa được bật. Cần bật trong Firebase Console → Authentication → Sign-in method → Google.";
+    case "auth/configuration-not-found":
+      return "Firebase chưa cấu hình Google provider. Cần bật trong Firebase Console → Authentication → Sign-in method.";
+    case "auth/unauthorized-domain":
+      return "Domain này chưa được phép. Cần add vào Firebase → Authentication → Settings → Authorized domains.";
+    case "auth/network-request-failed":
+      return "Mất kết nối mạng. Ba mẹ kiểm tra Wi-Fi/4G rồi thử lại nhé.";
+    case "auth/account-exists-with-different-credential":
+      return "Email này đã đăng ký bằng phương thức khác. Vui lòng dùng đúng cách đã đăng ký lần đầu.";
+    default:
+      return `Không đăng nhập được (${code}). Ba mẹ thử lại sau hoặc liên hệ phòng khám.`;
+  }
+}
 
 export function GoogleSignInButton({ redirectTo = "/" }: { redirectTo?: string }) {
   const router = useRouter();
@@ -20,12 +44,12 @@ export function GoogleSignInButton({ redirectTo = "/" }: { redirectTo?: string }
       router.push(redirectTo);
       router.refresh();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Đăng nhập Google không thành công";
-      if (msg.includes("popup-closed-by-user") || msg.includes("cancelled")) {
-        setError(null);
-      } else {
-        setError("Không đăng nhập được. Vui lòng thử lại.");
-      }
+      const code =
+        typeof err === "object" && err && "code" in err
+          ? (err as AuthError).code
+          : "unknown";
+      console.error("[GoogleSignIn] error code:", code, err);
+      setError(friendlyAuthError(code));
     } finally {
       setLoading(false);
     }

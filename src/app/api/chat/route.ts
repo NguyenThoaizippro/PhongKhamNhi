@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
 import { getLLMProvider } from "@/lib/llm";
+import { GeminiOverloadError } from "@/lib/llm/gemini";
 import { getKBEntries, formatKBForPrompt } from "@/lib/sheets/kb";
 import { isUnanswered, saveUnanswered } from "@/lib/unanswered/save";
 
@@ -63,11 +64,11 @@ export async function POST(req: NextRequest) {
       } catch (err) {
         const msg = err instanceof Error ? err.message : "Lỗi không xác định";
         console.error("Chat error:", msg);
-        controller.enqueue(
-          encoder.encode(
-            "\n\n⚠️ Xin lỗi, trợ lý đang gặp sự cố. Ba mẹ vui lòng gọi 0985.350.570 để được hỗ trợ trực tiếp."
-          )
-        );
+        const friendly =
+          err instanceof GeminiOverloadError
+            ? "\n\n⏳ Dế Mèn AI đang quá tải, ba mẹ chờ chút rồi gửi lại tin nhắn nhé. Cần gấp xin gọi **0985.350.570**."
+            : "\n\n⚠️ Xin lỗi, trợ lý đang gặp sự cố. Ba mẹ vui lòng gọi **0985.350.570** để được hỗ trợ trực tiếp.";
+        controller.enqueue(encoder.encode(friendly));
       } finally {
         controller.close();
 

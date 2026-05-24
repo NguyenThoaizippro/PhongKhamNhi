@@ -63,7 +63,17 @@
       "Bash(firebase projects:list --json)",
       "Bash(awk -F= '/^[A-Z_]+=/ {key=$1; val_len=length\\($0\\)-length\\($1\\)-1; printf \"%-45s len=%d\\\\n\", key, val_len}' .env.local)",
       "Bash(npm test *)",
-      "Bash(npm uninstall *)"
+      "Bash(npm uninstall *)",
+      "Bash(command -v vercel)",
+      "Bash(command -v gh)",
+      "Bash(gh auth *)",
+      "Bash(awk -F= '{key=$1; val_len=length\\($0\\)-length\\($1\\)-1; status=\\(val_len>0?\"✓\":\"✗\"\\); printf \"%s %-45s\\\\n\", status, key}')",
+      "Bash(node *)",
+      "Bash(awk -F= '{key=$1; val_len=length\\($0\\)-length\\($1\\)-1; status=\\(val_len>0?\"✓\":\"○\"\\); printf \"%s %s\\\\n\", status, key}')",
+      "Bash(lsof -ti:3000,3001)",
+      "Bash(xargs -r kill)",
+      "Bash(lsof -ti:3000)",
+      "Bash(lsof -ti:3001)"
     ]
   }
 }
