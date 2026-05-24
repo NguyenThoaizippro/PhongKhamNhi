@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const INITIAL_GREETING: ChatMsg = {
   role: "assistant",
   content:
-    "Chào ba mẹ! 👋 Mình là **Dế Mèn AI** — trợ lý ảo của phòng khám.\n\nMình có thể giúp ba mẹ về:\n- Giờ làm việc, địa chỉ\n- Triệu chứng phổ biến ở bé\n- Đặt lịch khám\n\nBa mẹ cứ hỏi nhé!",
+    "Chào ba mẹ! 👋 Mình là **Dế Mèn AI** — trợ lý ảo của phòng khám.\n\nMình có thể giúp ba mẹ về:\n- Giờ làm việc, địa chỉ\n- Triệu chứng phổ biến ở bé\n- Đặt lịch khám với **Bác sĩ Đồng**\n\nBa mẹ cứ hỏi nhé!",
 };
 
 const QUICK_PROMPTS = [

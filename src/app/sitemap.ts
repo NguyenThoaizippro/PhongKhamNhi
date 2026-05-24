@@ -19,6 +19,9 @@ async function fetchPublishedSlugs(): Promise<string[]> {
     "tre-sot-cao-khi-nao-can-di-kham",
     "tieu-chay-cap-o-tre-cach-bu-nuoc-dien-giai",
     "tre-bieng-an-7-meo-tu-bac-si-dinh-duong",
+    "tay-chan-mieng-cha-me-can-biet-gi",
+    "viem-da-co-dia-o-tre-cham-soc-the-nao",
+    "tre-so-sinh-trao-nguoc-co-nguy-hiem-khong",
   ];
 
   const hasFirebase =

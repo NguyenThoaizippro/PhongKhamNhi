@@ -15,6 +15,14 @@ export const CLINIC = {
   emergency: "115",
 } as const;
 
+export const DOCTOR = {
+  name: "Bác sĩ Đồng",
+  fullName: "Bác sĩ Đồng",
+  title: "Bác sĩ Chuyên khoa Nhi",
+  bio: "Bác sĩ Đồng là bác sĩ chính tại Phòng Khám Nhi Đồng Dế Mèn, thạo cả 6 chuyên khoa nhi: hô hấp, tiêu hoá, truyền nhiễm, sơ sinh, dinh dưỡng và da liễu. Tận tâm với từng bệnh nhi, đặt sức khoẻ và sự phát triển toàn diện của bé lên hàng đầu.",
+  shortBio: "Bác sĩ chính · Thạo cả 6 chuyên khoa Nhi",
+} as const;
+
 export const SPECIALTIES = [
   {
     slug: "ho-hap",

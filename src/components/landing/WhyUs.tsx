@@ -1,11 +1,11 @@
 import { Container } from "@/components/ui/Container";
-import { CLINIC } from "@/lib/constants";
+import { CLINIC, DOCTOR } from "@/lib/constants";
 
 const REASONS = [
   {
     icon: "🩺",
-    title: "Bác sĩ chuyên khoa nhi",
-    desc: "Đội ngũ bác sĩ được đào tạo bài bản, có nhiều năm kinh nghiệm khám và điều trị bệnh trẻ em.",
+    title: `${DOCTOR.name} thạo cả 6 chuyên khoa`,
+    desc: "Bác sĩ Đồng chuyên khoa Nhi, khám và điều trị bệnh trẻ em ở cả 6 lĩnh vực: hô hấp, tiêu hoá, truyền nhiễm, sơ sinh, dinh dưỡng và da liễu — ba mẹ không cần đi nhiều phòng khám.",
   },
   {
     icon: "💊",
@@ -15,7 +15,7 @@ const REASONS = [
   {
     icon: "🤖",
     title: "Tư vấn AI 24/7",
-    desc: "Chatbot Dế Mèn trả lời câu hỏi phổ biến từ tài liệu bác sĩ soạn, hướng dẫn khi nào cần khám gấp.",
+    desc: "Chatbot Dế Mèn trả lời câu hỏi phổ biến từ tài liệu bác sĩ Đồng soạn, hướng dẫn khi nào cần khám gấp.",
   },
   {
     icon: "📅",

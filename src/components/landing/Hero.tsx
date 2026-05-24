@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { CLINIC } from "@/lib/constants";
+import { CLINIC, DOCTOR } from "@/lib/constants";
 
 export function Hero() {
   return (
@@ -99,7 +99,7 @@ export function Hero() {
                 <span className="text-[color:var(--color-primary)]">●</span> Đang nhận khám
               </div>
               <div className="absolute -bottom-2 -left-2 sm:bottom-8 sm:-left-4 bg-[color:var(--color-accent)] text-white rounded-2xl shadow-lg px-3 py-2 text-xs sm:text-sm font-bold -rotate-3">
-                🩺 Bác sĩ chuyên nhi
+                🩺 {DOCTOR.shortBio}
               </div>
             </div>
           </div>
