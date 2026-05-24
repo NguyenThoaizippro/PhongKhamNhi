@@ -4,136 +4,150 @@
 
 **Last session:** 2026-05-24
 **Repo:** https://github.com/NguyenThoaizippro/PhongKhamNhi
-**Last commit:** `feat(chatbot): Google Sheets KB + self-learning unanswered loop`
-
-**⚠️ Decision đã chốt (2026-05-24):** TDD tạm hoãn — finish 13 phases trước, test các phase quan trọng sau. Xem `CLAUDE.md` section "Testing Strategy".
-
----
-
-## ✅ Đã hoàn thành (10/13 phases)
-
-| Phase | Output |
-|-------|--------|
-| 0. CLAUDE.md update | Brand info, 6 chuyên khoa, color tokens, privacy rules |
-| 1. Init Next.js 16 | TypeScript + Tailwind v4 + App Router + Be Vietnam Pro font |
-| 2. Firebase code | Client + Admin SDK, types, `firestore.rules`, `docs/firebase-setup.md` |
-| 3. Header + Hero + Footer | Sticky header, gradient hero với mascot, footer 4-col |
-| 4. Specialties + WhyUs + ClinicInfo | Grid 6 chuyên khoa, 6 lý do trust, Maps embed |
-| 5. Trang đăng ký khám | Form zod + Server Action, graceful degrade nếu chưa có Firebase |
-| 6. Auth system | Magic Link Email + Google sign-in + admin email/pwd |
-| 7. Public blog | `/blog` list + filter + `/blog/[slug]` + markdown + mock fallback |
-| 8. Admin blog editor | `/admin/blog` CRUD, MarkdownEditor, Cloudinary upload |
-| 9. Chatbot UI + Gemini | Floating widget, streaming SSE, provider-agnostic, mock fallback |
-| 10. Sheets KB + self-learning | Inject Sheet KB vào system prompt (5-min cache), detect "chưa có thông tin" → ghi Firestore, /admin/unanswered review |
-
-**Test status:** `npm run build` ✓ pass. 20 routes generated.
-
-**Cloudinary thay Firebase Storage:** đã setup `src/lib/cloudinary.ts` + credentials trong `.env.local`.
+**Last commit:** `c9bc545 feat(admin,booking): /admin/bookings dashboard + auth wall + email Resend + lịch sử PH`
+**Branch:** `main` — clean, đã push origin
 
 ---
 
-## 🚧 Đang chờ user setup (BLOCK Phase 6+)
+## 🎯 Trạng thái hiện tại
 
-### A. Firebase project (15 phút — đọc `docs/firebase-setup.md`)
+**13/13 phases done + 5 milestone bổ sung:**
 
-- [ ] Tạo project tại https://console.firebase.google.com/
-- [ ] Enable Authentication (Email/Password + Google + Phone OTP)
-- [ ] Enable Firestore (location `asia-southeast1`)
-- [ ] Enable Storage (cùng location)
-- [ ] Copy client config → `.env.local` (6 biến `NEXT_PUBLIC_FIREBASE_*`)
-- [ ] Copy service account JSON → `.env.local` (3 biến `FIREBASE_ADMIN_*`)
-- [ ] Deploy rules: `firebase deploy --only firestore:rules`
-
-### B. Gemini API key (3 phút)
-
-- [ ] Lấy free tại https://aistudio.google.com/app/apikey
-- [ ] Paste vào `.env.local` → `GEMINI_API_KEY=...`
-
-### C. Google Sheets service account (10 phút)
-
-- [ ] Console: https://console.cloud.google.com
-- [ ] Tạo service account → download JSON
-- [ ] Tạo 2 Sheets: `KB` (Q&A) + `Unanswered`
-- [ ] Share Sheets cho service account email với quyền Editor
-- [ ] Paste 3 biến vào `.env.local`: `GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`, `GOOGLE_SHEETS_KB_ID`
-
-### D. Resend (email) — optional, làm sau
-
-- [ ] Đăng ký free tại https://resend.com
-- [ ] `RESEND_API_KEY=...`
+| Milestone | Path | Status |
+|-----------|------|--------|
+| 📅 Admin booking dashboard | `/admin/bookings` | ✅ Đã build, BS quản lý từng booking + đổi status + ghi chú |
+| 🔒 Auth wall đặt lịch | `/dang-ky-kham` | ✅ PH bắt buộc login mới đặt được |
+| 📋 Lịch sử PH | `/tai-khoan/lich-su-kham` | ✅ PH login xem các booking của mình |
+| ✉️ Email Resend wired | `lib/email/{client,booking-emails}.ts` | ✅ PH nhận confirm + BS nhận notify |
+| 🧪 Test suite | Vitest | ✅ 132 tests / 16 files pass, build OK |
 
 ---
 
-## 📋 Task list còn lại (TaskList vẫn lưu qua session)
+## 👤 Brand đã chốt
 
-| # | Phase | Cần keys gì |
-|---|-------|-------------|
-| 8 | Phase 7: Public blog UI + Firestore | Firebase ✓ A |
-| 9 | Phase 8: Admin blog editor (Cloudinary upload) | Firebase ✓ A |
-| 10 | **Phase 9: Chatbot UI + Gemini** | Gemini ✓ B (graceful degrade nếu chưa) |
-| 11 | Phase 10: Sheets KB + self-learning | Gemini + Sheets ✓ B + C |
-| 12 | Phase 11: Booking qua chatbot | Cả 3 |
-| 13 | Phase 12: Polish + SEO + deploy Vercel | Tất cả |
+- **Tên phòng khám:** Phòng Khám Nhi Đồng Dế Mèn
+- **Bác sĩ chính:** **Bác sĩ Đông** (KHÔNG phải Đồng — đã rename toàn site) — thạo cả 6 chuyên khoa nhi
+- **Email admin:** `nnthoai0703@gmail.com` (cùng giá trị `ADMIN_EMAIL` và `NEXT_PUBLIC_ADMIN_EMAIL`)
+- **Email BS nhận booking notify:** `DOCTOR_EMAIL=nnthoai0703@gmail.com`
+- **Resend sandbox:** `EMAIL_FROM="Phòng Khám Dế Mèn <onboarding@resend.dev>"` — chỉ gửi tới email đăng ký Resend (chính `nnthoai0703@gmail.com`). **Khi launch production phải verify domain phongkhamdemen.vn**.
 
 ---
 
-## 🎯 Kế hoạch tiếp theo (đề xuất)
+## 🌳 Tech stack (chốt)
 
-Bạn có 2 lựa chọn khi quay lại:
-
-**Lựa chọn 1 — Làm Phase 9 (chatbot UI) trước:**
-- Tôi build UI floating widget + LLM provider abstraction
-- Graceful degrade: hoạt động UI ngay cả khi chưa có Gemini key
-- Khi bạn add `GEMINI_API_KEY` → chatbot trả lời thật
-
-**Lựa chọn 2 — Setup Firebase + làm Phase 6 (auth):**
-- Bạn làm checklist A (15 phút)
-- Báo tôi → unblock Phase 6, 7, 8 (auth + blog)
-
-→ **Recommend:** Lựa chọn 1, vì:
-- Không block bạn (không cần setup gì)
-- Chatbot là feature flagship của project
-- Phase 6 đợi bạn rảnh setup Firebase
+| Layer | Tech |
+|-------|------|
+| Framework | Next.js 16 (App Router) + TypeScript 5 |
+| Styling | Tailwind v4 + design tokens CSS variables |
+| DB | Firebase Firestore (admin SDK server-side) |
+| Auth | Firebase Auth (Google + Magic Link Email + admin email/pwd) |
+| LLM | Gemini API — model `gemini-2.5-flash-lite` (đã đổi từ flash do 503 overload) |
+| Email | Resend (sandbox `onboarding@resend.dev`) |
+| Image storage | Cloudinary |
+| KB | Google Sheets API (1 sheet, 5 entries hiện tại) |
+| Hosting | Vercel (region sin1) |
+| Test | Vitest + React Testing Library + jsdom + jest-dom |
 
 ---
 
-## 📝 Quyết định đã chốt (KHÔNG đổi)
+## 📂 Cấu trúc routes
 
-- **Stack:** Next.js 16 + Tailwind v4 + Firebase + Gemini + Google Sheets + Resend + Vercel
-- **LLM strategy:** Provider-agnostic abstraction (Gemini default, dễ swap Claude/OpenAI sau)
-- **KB:** Google Sheets (bác sĩ edit dễ), grounded RAG kiểu NotebookLM (không cần vector search dưới 150 câu)
-- **Auth:** Phụ huynh = phone OTP + Google. Bác sĩ = email/password admin riêng
-- **Self-learning:** Câu chưa trả lời được → save Firestore + sheet `Unanswered` → bác sĩ trả lời → merge KB
-- **Design tokens:** Xanh `#7CB342`, cam `#E53935`, font Be Vietnam Pro
+```
+PUBLIC
+├ /                       Landing
+├ /blog                   Blog list + filter chuyên khoa
+├ /blog/[slug]            Blog detail (6 mock posts, BS Đông là author)
+├ /dang-ky-kham           Auth wall → BookingForm
+├ /dang-nhap              Google + Magic Link, support ?redirect=
+├ /dang-nhap/finish       Hoàn tất magic link
+├ /tai-khoan/lich-su-kham PH xem booking của mình
 
----
+ADMIN (protected — middleware check role admin)
+├ /admin                  Dashboard với 3 card
+├ /admin/login            Admin email/pwd login
+├ /admin/bookings         Quản lý booking + filter + edit status + note BS
+├ /admin/blog             List blog posts
+├ /admin/blog/new         Tạo bài
+├ /admin/blog/[id]/edit   Edit bài
+├ /admin/unanswered       Câu hỏi chatbot chưa trả lời
 
-## 🔧 Lệnh thường dùng
-
-```bash
-npm run dev           # Dev server http://localhost:3000
-npm run typecheck     # TypeScript check
-npm run build         # Production build
-npm run lint          # ESLint
-
-git status            # Xem changes
-git log --oneline -5  # 5 commit gần nhất
+API
+├ /api/chat                       POST stream Gemini
+├ /api/booking                    POST tạo booking từ chatbot
+├ /api/me/bookings                GET booking của user hiện tại
+├ /api/admin/bookings/[id]        PATCH status + doctorNote (admin only)
+├ /api/admin/posts                CRUD post
+├ /api/admin/posts/[id]           Update post
+├ /api/admin/unanswered/[id]      Update unanswered
+├ /api/admin/upload               Cloudinary signed upload
+├ /sitemap.xml + /robots.txt      Auto
 ```
 
 ---
 
-## 🐛 Cách resume cho session sau
+## 🔐 Env state (22 keys)
 
-Khi mở Claude Code session mới, gõ:
+**18 keys ✓ SET** trong `.env.local` + Vercel.
+**4 keys ○ EMPTY** (optional):
+- `GOOGLE_SHEETS_UNANSWERED_ID` (code không dùng — unanswered lưu Firestore)
+- `NEXT_PUBLIC_SITE_URL` (chưa có domain riêng — dùng default `phongkhamdemen.vn`)
+- Còn 1-2 optional khác
+
+`RESEND_API_KEY` đã có, đã wire vào `lib/email/`.
+
+---
+
+## 🧪 Test commands
+
+```bash
+npm test              # 132 tests, ~14s
+npm run test:watch
+npm run test:coverage
+npm run typecheck     # tsc --noEmit
+npm run build         # production build
+npm run dev           # http://localhost:3000
+```
+
+---
+
+## 📋 BACKLOG còn lại
+
+Xem file `BACKLOG.md` ở root:
+
+- 🟡 **P2 — OG image** — `/images/og-image.jpg` chưa tạo
+- 🟡 **P3 — Firestore composite indexes** — `posts.where(specialty).orderBy(publishedAt)` cần index
+- 🟢 **P4 — Favicon thật** (mascot Dế Mèn)
+- 🟢 **P5 — Custom domain** `phongkhamdemen.vn`
+- 🟢 **P6 — Submit sitemap Google Search Console**
+- 🟢 **P7 — Vercel Analytics + Speed Insights**
+- 🧪 **P8 — Mở rộng test suite** (`api/chat`, `api/booking`, `getKBEntries`, ChatWidget complex test)
+
+---
+
+## 💡 Quyết định đã chốt — KHÔNG đổi
+
+1. **Stack:** Next.js 16 + Tailwind v4 + Firebase + Gemini + Sheets + Resend + Vercel
+2. **LLM:** Provider-agnostic (Gemini default, dễ swap Claude/OpenAI) — model hiện tại `gemini-2.5-flash-lite`
+3. **KB:** Google Sheets (bác sĩ edit dễ), grounded RAG
+4. **Auth:** PH = Google + Magic Link. BS Đông = email/password admin
+5. **Self-learning:** Unanswered → Firestore → `/admin/unanswered` review (KHÔNG dùng Sheet)
+6. **Booking authn:** Bắt buộc login để đặt lịch qua web form. Chatbot có thể đặt guest nhưng UID không attach
+7. **Email:** Resend sandbox cho test, verify domain khi launch
+8. **Testing:** Vitest (không TDD strict). Cover validation + parser + UI + LLM + email = 132 cases
+9. **Bản quyền:** © 2026 Nguyễn Thoại (xem LICENSE)
+
+---
+
+## 🚀 Lệnh resume cho session sau
 
 ```
 /resume-work
 ```
 
-Hoặc nói với Claude: **"Đọc RESUME.md và tiếp tục Phase 9"**
+Hoặc nói với Claude: **"Đọc RESUME.md và tiếp tục"**.
 
 Claude sẽ:
 1. Đọc file này
-2. Đọc TaskList (vẫn còn)
-3. Check `git log` để xem last commit
-4. Hỏi bạn muốn tiếp Phase nào
+2. Check `git log --oneline -10`
+3. Check `BACKLOG.md`
+4. Hỏi bạn muốn làm gì tiếp
