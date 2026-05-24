@@ -3,6 +3,7 @@ import { Be_Vietnam_Pro } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/auth/AuthProvider";
+import { ChatbotMount } from "@/components/chatbot/ChatbotMount";
 import "./globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -41,6 +42,7 @@ export default function RootLayout({
           <Header />
           <div className="flex-1 flex flex-col">{children}</div>
           <Footer />
+          <ChatbotMount />
         </AuthProvider>
       </body>
     </html>

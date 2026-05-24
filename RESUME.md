@@ -8,7 +8,7 @@
 
 ---
 
-## ✅ Đã hoàn thành (8/13 phases)
+## ✅ Đã hoàn thành (9/13 phases)
 
 | Phase | Output |
 |-------|--------|
@@ -20,9 +20,10 @@
 | 5. Trang đăng ký khám | Form zod + Server Action, graceful degrade nếu chưa có Firebase |
 | 6. Auth system | **Magic Link Email + Google sign-in** + admin email/pwd, AuthProvider, UserMenu, /admin guard |
 | 7. Public blog | `/blog` list + filter chuyên khoa + `/blog/[slug]` detail + markdown render + mock fallback |
-| 8. Admin blog editor | `/admin/blog` list + new/edit form, MarkdownEditor (split preview), Cloudinary upload API, Firestore CRUD qua API routes (Bearer token) |
+| 8. Admin blog editor | `/admin/blog` list + new/edit form, MarkdownEditor, Cloudinary upload, Firestore CRUD |
+| 9. Chatbot UI + Gemini | Floating widget + drawer mobile, streaming SSE từ Gemini, provider-agnostic abstraction, mock fallback khi chưa có key, quick prompts gợi ý |
 
-**Test status:** `npm run build` ✓ pass. 17 routes generated.
+**Test status:** `npm run build` ✓ pass. 18 routes generated.
 
 **Cloudinary thay Firebase Storage:** đã setup `src/lib/cloudinary.ts` + credentials trong `.env.local`.
 
