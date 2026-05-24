@@ -5,11 +5,14 @@ import Image from "next/image";
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { UserMenu } from "@/components/auth/UserMenu";
+import { useAuth } from "@/lib/auth/AuthProvider";
 import { CLINIC, NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, loading } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-[color:var(--color-border)]">
@@ -63,9 +66,21 @@ export function Header() {
             <PhoneIcon className="w-4 h-4" />
             {CLINIC.phoneDisplay}
           </a>
-          <Button href="/dang-ky-kham" size="sm" variant="primary">
-            Đăng ký khám
-          </Button>
+          {!loading && user ? (
+            <UserMenu />
+          ) : (
+            <>
+              <Link
+                href="/dang-nhap"
+                className="text-sm font-semibold text-[color:var(--color-text)] hover:text-[color:var(--color-primary-dark)] px-3 py-2"
+              >
+                Đăng nhập
+              </Link>
+              <Button href="/dang-ky-kham" size="sm" variant="primary">
+                Đăng ký khám
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile menu button */}
@@ -107,6 +122,15 @@ export function Header() {
             <PhoneIcon className="w-5 h-5" />
             {CLINIC.phoneDisplay}
           </a>
+          {!loading && !user && (
+            <Link
+              href="/dang-nhap"
+              onClick={() => setMobileOpen(false)}
+              className="px-4 py-3 rounded-lg text-base font-medium text-[color:var(--color-text)] hover:bg-[color:var(--color-primary-bg)]"
+            >
+              Đăng nhập
+            </Link>
+          )}
           <Button href="/dang-ky-kham" size="md" variant="primary" className="mt-2">
             Đăng ký khám
           </Button>

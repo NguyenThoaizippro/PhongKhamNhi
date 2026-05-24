@@ -7,7 +7,6 @@ import "server-only";
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
-import { getStorage, type Storage } from "firebase-admin/storage";
 
 function getAdminApp(): App {
   if (getApps().length > 0) {
@@ -35,4 +34,3 @@ const app = getAdminApp();
 
 export const adminAuth: Auth = getAuth(app);
 export const adminDb: Firestore = getFirestore(app);
-export const adminStorage: Storage = getStorage(app);

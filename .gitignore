@@ -46,6 +46,7 @@ service-account*.json
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+.serena/
 
 # OS
 Thumbs.db
