@@ -57,12 +57,28 @@ describe("MagicLinkForm", () => {
 
   it("hiện error khi Firebase reject (unauthorized URI)", async () => {
     const user = userEvent.setup();
-    sendMock.mockRejectedValueOnce(new Error("auth/unauthorized-continue-uri"));
+    const firebaseErr = Object.assign(new Error("Domain not allowed"), {
+      code: "auth/unauthorized-continue-uri",
+    });
+    sendMock.mockRejectedValueOnce(firebaseErr);
     render(<MagicLinkForm />);
     await user.type(screen.getByLabelText(/Email/i), "test@example.com");
     await user.click(screen.getByRole("button", { name: /gửi link/i }));
     await screen.findByRole("alert");
-    expect(screen.getByRole("alert")).toHaveTextContent(/domain chưa được phép/i);
+    expect(screen.getByRole("alert")).toHaveTextContent(/domain.*chưa được/i);
+  });
+
+  it("hiện error khi Email Link sign-in chưa enable trong Firebase", async () => {
+    const user = userEvent.setup();
+    const firebaseErr = Object.assign(new Error("Operation not allowed"), {
+      code: "auth/operation-not-allowed",
+    });
+    sendMock.mockRejectedValueOnce(firebaseErr);
+    render(<MagicLinkForm />);
+    await user.type(screen.getByLabelText(/Email/i), "test@example.com");
+    await user.click(screen.getByRole("button", { name: /gửi link/i }));
+    await screen.findByRole("alert");
+    expect(screen.getByRole("alert")).toHaveTextContent(/chưa được kích hoạt/i);
   });
 
   it("nút 'Gửi cho email khác' đưa về idle state", async () => {

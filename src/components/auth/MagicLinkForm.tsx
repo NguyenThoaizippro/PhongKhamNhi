@@ -32,12 +32,27 @@ export function MagicLinkForm({ redirectTo = "/" }: { redirectTo?: string }) {
       window.localStorage.setItem(LS_REDIRECT_KEY, redirectTo);
       setStatus("sent");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Không gửi được email";
-      setError(
-        msg.includes("auth/unauthorized-continue-uri")
-          ? "Domain chưa được phép. Liên hệ phòng khám."
-          : "Không gửi được email. Thử lại sau."
-      );
+      const code = (err as { code?: string })?.code ?? "";
+      const message = err instanceof Error ? err.message : "";
+      console.error("[MagicLink] sendSignInLinkToEmail failed:", code, message);
+
+      let friendly = "Không gửi được email. Thử lại sau.";
+      if (code === "auth/unauthorized-continue-uri" || code === "auth/invalid-continue-uri") {
+        friendly =
+          "Domain hiện tại chưa được Firebase cho phép. Vui lòng liên hệ phòng khám (0985.350.570).";
+      } else if (code === "auth/operation-not-allowed") {
+        friendly =
+          "Chức năng đăng nhập qua email chưa được kích hoạt. Vui lòng liên hệ phòng khám (0985.350.570).";
+      } else if (code === "auth/too-many-requests") {
+        friendly = "Bạn đã gửi quá nhiều lần. Vui lòng chờ vài phút rồi thử lại.";
+      } else if (code === "auth/invalid-email") {
+        friendly = "Email không hợp lệ.";
+      } else if (code === "auth/network-request-failed") {
+        friendly = "Không kết nối được mạng. Kiểm tra internet rồi thử lại.";
+      } else if (code) {
+        friendly = `Không gửi được email (${code}). Vui lòng thử lại hoặc gọi 0985.350.570.`;
+      }
+      setError(friendly);
       setStatus("error");
     }
   }

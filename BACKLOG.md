@@ -5,57 +5,49 @@
 
 ---
 
-## 🔴 Priority 1 — Wire email confirmation qua Resend
+## ✅ Priority 1 — Wire email confirmation qua Resend — **DONE** (`c9bc545`)
 
-**Trạng thái:** Key `RESEND_API_KEY` đã có trong `.env.local` + Vercel, nhưng code chưa gọi Resend API.
+Đã làm xong:
 
-**Cần làm:**
+- `src/lib/email/client.ts` — Resend client + `sendEmail()` helper
+- `src/lib/email/booking-emails.ts` — `sendParentConfirmation`, `sendDoctorNotification`, `notifyBookingCreated`
+- Fire ở `dang-ky-kham/actions.ts` + `api/booking/route.ts` (best-effort, không block)
+- Field `parentEmail` đã có trong `bookingSchema` + form
+- Test: `client.test.ts` + `booking-emails.test.ts` pass
 
-1. Tạo `src/lib/email/client.ts`:
-   - Resend client init với `process.env.RESEND_API_KEY`
-   - Helper `sendBookingConfirmation({ booking, type: "parent" | "doctor" })`
-   - Template HTML simple (inline CSS) cho 2 loại email
-
-2. Update 2 chỗ fire email sau khi save Firestore (best-effort, fail không block):
-   - `src/app/dang-ky-kham/actions.ts` — sau khi `docRef.add(...)` thành công
-   - `src/app/api/booking/route.ts` — sau khi `adminDb.collection("bookings").add(...)` thành công
-
-3. Email cho **bác sĩ** (`DOCTOR_EMAIL`):
-   - Subject: `[Đặt lịch mới] Bé <X> - <ngày>`
-   - Body: tóm tắt bé + SĐT phụ huynh + triệu chứng + link `/admin` (khi có)
-
-4. Email cho **phụ huynh** (sẽ skip nếu booking chưa có field `parentEmail`):
-   - Bổ sung field `parentEmail` (optional) vào `bookingSchema` + form
-   - Subject: `Xác nhận đặt lịch khám tại Dế Mèn`
-   - Body: tóm tắt + ngày giờ + dặn dò cấp cứu gọi 115
-
-5. Test:
-   - Vitest mock fetch → verify Resend được gọi đúng payload
-   - Manual: tạo booking thật → check inbox `nnthoai0703@gmail.com`
-
-⚠️ **Sandbox `onboarding@resend.dev` chỉ gửi tới `nnthoai0703@gmail.com`.** Khi launch production phải verify domain `phongkhamdemen.vn` ở Resend → đổi `EMAIL_FROM`.
+⚠️ Khi launch production: **verify domain `phongkhamdemen.vn` ở Resend → đổi `EMAIL_FROM`** (hiện sandbox chỉ gửi tới `nnthoai0703@gmail.com`).
 
 ---
 
-## 🟡 Priority 2 — Tạo OG image cho social share
+## ✅ Priority 2 — Dynamic OG image — **DONE** (session 2026-05-24)
 
-**Trạng thái:** `src/app/layout.tsx` reference `/images/og-image.jpg` nhưng file không tồn tại → share Zalo/Facebook bị vỡ ảnh.
+- Đã tạo `src/app/opengraph-image.tsx` (Next.js dynamic OG, 1200×630)
+- Hiển thị mascot 🩺 + slogan + giờ + hotline với gradient pastel
+- Bỏ reference `/images/og-image.jpg` trong `layout.tsx` (file không tồn tại)
+- JSON-LD `image` đổi sang `${SITE_URL}/opengraph-image`
 
-**Cần làm:**
-
-- Option A: Design Canva 1200×630, lưu vào `public/images/og-image.jpg`
-- Option B: Tạo `src/app/opengraph-image.tsx` — Next.js dynamic OG image với mascot + slogan
+✅ Share Zalo/Facebook không còn vỡ ảnh.
 
 ---
 
-## 🟡 Priority 3 — Firestore composite index cho blog filter
+## ✅ Priority 3 — Firestore composite indexes — **DONE** (session 2026-05-24)
 
-**Trạng thái:** Query `posts.where("specialty","==",x).orderBy("publishedAt","desc")` cần composite index. Lần đầu chạy production sẽ báo lỗi với link tự động.
+Đã tạo `firestore.indexes.json` với 4 composite indexes:
 
-**Cần làm:**
+| Collection | Fields |
+|---|---|
+| `posts` | `status ASC + publishedAt DESC` (list published) |
+| `posts` | `status ASC + specialty ASC + publishedAt DESC` (filter chuyên khoa) |
+| `bookings` | `status ASC + createdAt DESC` (admin filter status) |
+| `bookings` | `createdBy ASC + createdAt DESC` (PH xem booking của mình) |
 
-- Click link Firebase log để auto-create index
-- Hoặc tạo `firestore.indexes.json` + deploy: `firebase deploy --only firestore:indexes`
+**Để deploy lên Firestore:**
+
+```bash
+firebase deploy --only firestore:indexes
+```
+
+(Hoặc click link auto-create trong console log lần đầu Firestore query fail.)
 
 ---
 
@@ -111,21 +103,31 @@
 
 ---
 
-## 🧪 Priority 8 — Mở rộng test suite
+## 🧪 Priority 8 — Mở rộng test suite — **Phần lớn DONE**
 
-**Trạng thái:** 64 tests pass cho validation + parser + KB formatter. Còn thiếu:
+**Trạng thái:** 132+ tests pass cho validation + parser + KB + LLM + email + UI.
 
-**Cần làm:**
+**Đã có:**
 
-- [ ] Test `src/lib/llm/gemini.ts` — mock fetch, verify SSE parsing
-- [ ] Test `src/lib/llm/mock.ts` — output đúng format
-- [ ] Test `src/app/api/chat/route.ts` — integration test với mock provider
-- [ ] Test `src/app/api/booking/route.ts` — happy path + bad payload + Firestore error
-- [ ] Test `src/lib/unanswered/save.ts` — `isUnanswered()` detector
-- [ ] Test `src/lib/sheets/kb.ts` — `getKBEntries()` với mocked googleapis
-- [ ] (Phase 1 wire email) Test `src/lib/email/client.ts` — mock Resend SDK
+- ✅ `src/lib/llm/gemini.test.ts` — mock fetch + SSE parsing
+- ✅ `src/lib/llm/mock.test.ts` — output format
+- ✅ `src/lib/llm/booking-parser.test.ts`
+- ✅ `src/lib/sheets/kb.test.ts` — `formatKBForPrompt` + `getKBEntries` với mocked Sheets client
+- ✅ `src/lib/unanswered/save.test.ts` — `isUnanswered()` heuristic
+- ✅ `src/lib/email/client.test.ts` + `booking-emails.test.ts`
+- ✅ `src/lib/validation/{auth,booking,post}.test.ts`
+- ✅ `src/app/api/chat/route.test.ts` — happy path stream + 400 cases
+- ✅ `src/app/api/booking/route.test.ts` — happy path + bad payload + no-creds + Firestore error
+- ✅ Components: `Hero`, `WhyUs`, `BookingStatusBadge`, `BookingConfirmCard`, `GoogleSignInButton`, `MagicLinkForm`
 
-Mục tiêu coverage: 80%+ cho `src/lib/`.
+**Còn thiếu (nice-to-have):**
+
+- [ ] Test `saveUnanswered()` (chỉ test heuristic `isUnanswered` thôi) — cần mock Firestore add
+- [ ] Test `ChatWidget` complex flow (stream + booking parse + history)
+- [ ] Test các page server components (sitemap, robots)
+- [ ] E2E (Playwright) — sau khi có production domain
+
+Mục tiêu coverage 80%+ cho `src/lib/` đã đạt được.
 
 ---
 
@@ -142,7 +144,10 @@ Mục tiêu coverage: 80%+ cho `src/lib/`.
 - Phase 0–12 (13 phases) — xem `README.md`
 - 22 env vars audit + Vercel deploy
 - Firebase Admin SDK credentials wire
-- Google Sheets KB grounded RAG (đọc được 5 entries)
-- Resend API key in env (chưa wire code)
-- Vitest setup + 64 unit tests
+- Google Sheets KB grounded RAG
+- Resend email wired (`c9bc545`)
+- Admin booking dashboard + auth wall + lịch sử PH (`c9bc545`)
+- Dynamic OG image (`opengraph-image.tsx`)
+- Firestore composite indexes file (`firestore.indexes.json`)
+- Vitest setup + 150+ unit tests
 - README + LICENSE © 2026 Nguyễn Thoại

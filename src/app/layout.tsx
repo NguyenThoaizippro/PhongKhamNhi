@@ -44,20 +44,11 @@ export const metadata: Metadata = {
     siteName: "Phòng Khám Nhi Đồng Dế Mèn",
     locale: "vi_VN",
     type: "website",
-    images: [
-      {
-        url: "/images/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Phòng Khám Nhi Đồng Dế Mèn",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Phòng Khám Nhi Đồng Dế Mèn",
     description: CLINIC.slogan,
-    images: ["/images/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -76,7 +67,7 @@ export default function RootLayout({
     description: CLINIC.slogan,
     telephone: `+84${CLINIC.phone.slice(1)}`,
     url: SITE_URL,
-    image: `${SITE_URL}/images/og-image.jpg`,
+    image: `${SITE_URL}/opengraph-image`,
     address: {
       "@type": "PostalAddress",
       streetAddress: "126 Liên khu 4-5",
